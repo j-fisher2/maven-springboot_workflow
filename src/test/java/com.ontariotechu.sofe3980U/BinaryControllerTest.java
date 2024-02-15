@@ -56,5 +56,45 @@ public class BinaryControllerTest {
 			.andExpect(model().attribute("result", "1110"))
 			.andExpect(model().attribute("operand1", "111"));
     }
+	@Test
+	public void testDefaultAddition() throws Exception {
+    			this.mvc.perform(post("/").param("operand1", "101").param("operator", "+").param("operand2", "11"))
+        			.andExpect(status().isOk())
+        			.andExpect(view().name("result"))
+        			.andExpect(model().attribute("result", "1000"))
+        			.andExpect(model().attribute("operand1", "101"));
+	}
+
+	@Test
+	public void testAdditionWithLeadingZeros() throws Exception {
+    			this.mvc.perform(post("/").param("operand1", "0101").param("operator", "+").param("operand2", "11"))
+        			.andExpect(status().isOk())
+        			.andExpect(view().name("result"))
+        			.andExpect(model().attribute("result", "1000"))
+        			.andExpect(model().attribute("operand1", "0101"));
+	}
+
+	@Test
+	public void testAdditionWithCarry() throws Exception {
+    		this.mvc.perform(post("/").param("operand1", "111").param("operator", "+").param("operand2", "111"))
+        		.andExpect(status().isOk())
+        		.andExpect(view().name("result"))
+        		.andExpect(model().attribute("result", "1110"))
+        		.andExpect(model().attribute("operand1", "111"));
+	}
+	@Test
+	public void testMissingOperator() throws Exception {
+    		this.mvc.perform(post("/").param("operand1", "101").param("operand2", "11"))
+        		.andExpect(status().isOk())
+        		.andExpect(view().name("Error"));
+	}
+
+	@Test
+	public void testInvalidOperator() throws Exception {
+    		this.mvc.perform(post("/").param("operand1", "101").param("operator", "?").param("operand2", "11"))
+        		.andExpect(status().isOk())
+        		.andExpect(view().name("Error"));
+	}
+
 
 }
