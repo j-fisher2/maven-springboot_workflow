@@ -38,16 +38,16 @@ public class BinaryControllerTest {
             .andExpect(view().name("calculator"))
 			.andExpect(model().attribute("operand1", ""))
 			.andExpect(model().attribute("operand1Focused", false));
-    }
+    	}
 	
-	    @Test
+	@Test
     public void getParameter() throws Exception {
         this.mvc.perform(get("/").param("operand1","111"))
             .andExpect(status().isOk())
             .andExpect(view().name("calculator"))
 			.andExpect(model().attribute("operand1", "111"))
 			.andExpect(model().attribute("operand1Focused", true));
-    }
+    	}
 	@Test
 	    public void postParameter() throws Exception {
         this.mvc.perform(post("/").param("operand1","111").param("operator","+").param("operand2","111"))//.andDo(print())
@@ -55,7 +55,7 @@ public class BinaryControllerTest {
             .andExpect(view().name("result"))
 			.andExpect(model().attribute("result", "1110"))
 			.andExpect(model().attribute("operand1", "111"));
-    }
+    	}
 	@Test
 	public void testDefaultAddition() throws Exception {
     			this.mvc.perform(post("/").param("operand1", "101").param("operator", "+").param("operand2", "11"))
@@ -94,6 +94,62 @@ public class BinaryControllerTest {
     		this.mvc.perform(post("/").param("operand1", "101").param("operator", "?").param("operand2", "11"))
         		.andExpect(status().isOk())
         		.andExpect(view().name("Error"));
+	}
+
+	@Test
+	public void testBitwiseOr() throws Exception {
+    	this.mvc.perform(post("/").param("operand1", "101").param("operator", "|").param("operand2", "110"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("result"))
+        .andExpect(model().attribute("result", "111"))
+        .andExpect(model().attribute("operand1", "101"));
+	}
+
+	@Test
+	public void testBitwiseAnd() throws Exception {
+    	this.mvc.perform(post("/").param("operand1", "101").param("operator", "&").param("operand2", "110"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("result"))
+        .andExpect(model().attribute("result", "100"))
+        .andExpect(model().attribute("operand1", "101"));
+	}
+	@Test
+	public void testDefaultMultiplication() throws Exception {
+    	this.mvc.perform(post("/").param("operand1", "101").param("operator", "*").param("operand2", "11"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("result"))
+        .andExpect(model().attribute("result", "1111"))
+        .andExpect(model().attribute("operand1", "101"));
+	}
+
+	@Test
+	public void testOr() throws Exception {
+    	this.mvc.perform(post("/").param("operand1", "11101").param("operator","|").param("operand2", "01011"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("result"))
+        .andExpect(model().attribute("result", "11111"))
+        .andExpect(model().attribute("operand1", "11101"))
+        .andExpect(model().attribute("operand2", "01011"));
+	}
+
+	@Test
+	public void testAnd() throws Exception {
+    	this.mvc.perform(post("/").param("operand1", "11101").param("operator","&").param("operand2", "01011"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("result"))
+        .andExpect(model().attribute("result", "1001"))
+        .andExpect(model().attribute("operand1", "11101"))
+        .andExpect(model().attribute("operand2", "01011"));
+	}
+
+	@Test
+	public void testMultipli() throws Exception {
+    	this.mvc.perform(post("/").param("operand1", "10100").param("operator","*").param("operand2", "10101"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("result"))
+        .andExpect(model().attribute("result", "110100100"))
+        .andExpect(model().attribute("operand1", "10100"))
+        .andExpect(model().attribute("operand2", "10101"));
 	}
 
 
