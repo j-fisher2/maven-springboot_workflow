@@ -40,8 +40,8 @@ public class BinaryAPIController {
 	@GetMapping("/or_json")
 	public BinaryAPIResult orJSON(@RequestParam(name="operand1",required=false,defaultValue="") String operand1,
 			@RequestParam(name="operand2",required=false,defaultValue="") String operand2){
-		Binary number1=new Binary(operand2);
-		Binary number2=new Binary(operand1);
+		Binary number1=new Binary(operand1);
+		Binary number2=new Binary(operand2);
 		return new BinaryAPIResult(number1,"or",number2,Binary.or(number1,number2));
 
 	}
